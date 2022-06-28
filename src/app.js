@@ -7,6 +7,7 @@ const User = require('./models/userModel');
 const Product = require('./models/productModel');
 
 require('dotenv/config');
+const errorHandler = require('./helpers/errorHandler');
 
 app.use(cors());
 app.options('*', cors());
@@ -17,6 +18,8 @@ const api = process.env.API_URL;
 //Middleware
 app.use(express.json());
 app.use(morgan('tiny'));
+app.use(errorHandler);
+// app.use(authJwtVerification);
 
 //Routers
 const userRouter = require('./routers/userRouter');

@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { token } = require('morgan');
+const authJwtVerification = require('../helpers/jwtVerify');
 
 // create new user/ Registration
 router.post('/', async (req, res) => {
@@ -39,6 +39,8 @@ router.post('/login', async (req, res) => {
       const token = jwt.sign(
         {
           userID: userData._id,
+          isAdmin: userData.isAdmin,
+          userName: userData.name,
         },
         secret,
         {
@@ -56,7 +58,7 @@ router.post('/login', async (req, res) => {
 });
 
 // git all user
-router.get('/', async (req, res) => {
+router.get('/', authJwtVerification, async (req, res) => {
   try {
     const usersData = await User.find().select('-password');
     res.status(200).send(usersData);
