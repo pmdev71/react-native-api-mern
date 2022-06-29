@@ -108,4 +108,16 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// get User count -- how many user available
+router.get('/get/count', async (req, res) => {
+  try {
+    const usersCount = await User.countDocuments();
+    res.status(200).send({
+      usersCountt: usersCount,
+    });
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 module.exports = router;

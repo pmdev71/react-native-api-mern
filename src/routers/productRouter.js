@@ -2,9 +2,10 @@ const express = require('express');
 const Catagory = require('../models/catagoryModel');
 const router = express.Router();
 const Product = require('../models/productModel');
+const authJwtVerification = require('../helpers/jwtVerify');
 
 //create new Product
-router.post('/', async (req, res) => {
+router.post('/', authJwtVerification, async (req, res) => {
   try {
     //check posted categary exists on database
     const catagory = await Catagory.findById(req.body.catagory);
