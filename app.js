@@ -1,13 +1,13 @@
 const express = require('express');
 const app = express();
-require('./database/connect');
+require('./src/database/connect');
 const morgan = require('morgan');
 const cors = require('cors');
-const User = require('./models/userModel');
-const Product = require('./models/productModel');
+// const User = require('./models/userModel');
+// const Product = require('./models/productModel');
 
 require('dotenv/config');
-const errorHandler = require('./helpers/errorHandler');
+const errorHandler = require('./src/helpers/errorHandler');
 
 app.use(cors());
 app.options('*', cors());
@@ -19,13 +19,15 @@ const api = process.env.API_URL;
 app.use(express.json());
 app.use(morgan('tiny'));
 app.use(errorHandler);
+app.use('/public/uploads', express.static(__dirname + '/public/uploads/'));
+// console.log(__dirname);
 // app.use(authJwtVerification);
 
 //Routers
-const userRouter = require('./routers/userRouter');
-const productRouter = require('./routers/productRouter');
-const orderRouter = require('./routers/orderRouter');
-const catagoryRouter = require('./routers/catagoryRouter');
+const userRouter = require('./src/routers/userRouter');
+const productRouter = require('./src/routers/productRouter');
+const orderRouter = require('./src/routers/orderRouter');
+const catagoryRouter = require('./src/routers/catagoryRouter');
 
 app.use(`${api}/users`, userRouter);
 app.use(`${api}/products`, productRouter);
