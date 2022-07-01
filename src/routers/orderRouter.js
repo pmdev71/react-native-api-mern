@@ -69,7 +69,13 @@ router.get('/:id', async (req, res) => {
     const _id = req.params.id;
     const orderData = await Order.findById(_id)
       .populate('user', '-password')
-      .populate({ path: 'orderItems', populate: 'product' });
+      .populate({
+        path: 'orderItems',
+        populate: {
+          path: 'product',
+          populate: 'catagory',
+        },
+      });
     if (!orderData) {
       return res.status(400).send();
     }
@@ -132,6 +138,24 @@ router.get('/get/count', async (req, res) => {
     res.status(200).send({
       orderCount: orderCount,
     });
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+// get all orders by a single user using user id
+router.get('/get/userorders/:userid', async (req, res) => {
+  try {
+    const userOrdersData = await Order.find({ user: req.params.userid })
+      .populate({
+        path: 'orderItems',
+        populate: {
+          path: 'product',
+          populate: 'catagory',
+        },
+      })
+      .sort({ dateOrdered: -1 });
+    res.status(200).send(userOrdersData);
   } catch (err) {
     res.status(400).send(err);
   }
